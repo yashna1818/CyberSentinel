@@ -1,0 +1,79 @@
+{
+  "incident_id": "INC-THREAT-DDoS-001",
+  "timestamp": "2026-11-01T23:45:10.500Z",
+  "threat_summary": {
+    "threat_id": "THREAT-DDoS-001",
+    "attack_category": "DDoS",
+    "severity": "CRITICAL",
+    "confidence_score": 0.998,
+    "source_ip": "205.174.165.203",
+    "destination_ip": "192.168.10.50",
+    "evidence": [
+      "Observed surge rate of 12,450 packets/sec breaching 2,000 pps threshold",
+      "Recorded 420 SYN control flags indicative of state table exhaustion",
+      "HistGradientBoosting statistical confidence score of 100.0%"
+    ]
+  },
+  "investigation_summary": "Forensic Investigation for 205.174.165.203: Reconstructed 15 correlated network flows. Target web server 192.168.10.50 experienced massive SYN ingress flooding. Host Reputation status: KNOWN_OFFENDER (Historical Risk Score: 85.0/100). Coordinated Campaign Assessment: CONFIRMED MULTI-STAGE CAMPAIGN.",
+  "mitre_attack": {
+    "technique_id": "T1498",
+    "sub_technique_id": "T1498.001",
+    "technique_name": "Network Denial of Service: Direct Network Flood",
+    "tactic": "Impact",
+    "tactic_id": "TA0040",
+    "adversary_objective": "Disrupt legitimate operational availability and deny service access to customers and employees."
+  },
+  "recommended_mitigations": [
+    {
+      "action": "Enable Rate-Limiting & Upstream Filtering",
+      "type": "IMMEDIATE_CONTAINMENT",
+      "risk": "LOW",
+      "automated_safe": true,
+      "rationale": "Throttle ingress SYN and packet flood targeting 192.168.10.50."
+    },
+    {
+      "action": "Block Attacker IP 205.174.165.203 at Edge Firewall",
+      "type": "DISRUPTIVE_REMEDIATION",
+      "risk": "HIGH",
+      "automated_safe": false,
+      "rationale": "High-confidence flood source 205.174.165.203 requires network isolation."
+    }
+  ],
+  "human_approval_required": true,
+  "pending_approvals": [
+    {
+      "approval_id": "APPR-DDOS-01",
+      "action_name": "Block Attacker IP 205.174.165.203 at Edge Firewall",
+      "target_entity": "205.174.165.203",
+      "risk_level": "HIGH",
+      "status": "PENDING_APPROVAL"
+    }
+  ],
+  "workflow_audit_trail": [
+    {
+      "step_index": 1,
+      "agent": "Threat Detection Agent",
+      "action": "Triage & Evidence Extraction",
+      "details": "Assigned CRITICAL severity based on 12,450 pps flood."
+    },
+    {
+      "step_index": 2,
+      "agent": "Attack Investigation Agent",
+      "action": "Timeline Reconstruction & Threat Attribution",
+      "details": "Correlated 15 flows from 205.174.165.203 to port 80/443."
+    },
+    {
+      "step_index": 3,
+      "agent": "Threat Intelligence Agent",
+      "action": "MITRE ATT&CK RAG Mapping",
+      "details": "Mapped to T1498.001 Direct Network Flood (Impact)."
+    },
+    {
+      "step_index": 4,
+      "agent": "Security Response Agent",
+      "action": "Defensive Mitigation & HITL Verification",
+      "details": "Created pending approval for Edge Firewall IP block."
+    }
+  ],
+  "status": "AWAITING_ANALYST_APPROVAL"
+}

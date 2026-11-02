@@ -1,0 +1,83 @@
+{
+  "accuracy": 0.9966513185433236,
+  "precision": 0.9966584975701206,
+  "recall": 0.9966513185433236,
+  "f1_score": 0.9966500160437732,
+  "training_duration_seconds": 10.17632794380188,
+  "num_features": 67,
+  "training_samples": 47777,
+  "test_samples": 11945,
+  "classes": [
+    "Benign",
+    "DoS",
+    "Brute Force",
+    "DDoS",
+    "Infiltration",
+    "Botnet",
+    "Web Attacks",
+    "Port Scan"
+  ],
+  "classification_report": {
+    "Benign": {
+      "precision": 0.9953333333333333,
+      "recall": 0.9953333333333333,
+      "f1-score": 0.9953333333333333,
+      "support": 3000.0
+    },
+    "DoS": {
+      "precision": 0.9973342219260246,
+      "recall": 0.9976666666666667,
+      "f1-score": 0.9975004165972338,
+      "support": 3000.0
+    },
+    "Brute Force": {
+      "precision": 0.9994538503549972,
+      "recall": 1.0,
+      "f1-score": 0.9997268505872713,
+      "support": 1830.0
+    },
+    "DDoS": {
+      "precision": 0.9993328885923949,
+      "recall": 0.9986666666666667,
+      "f1-score": 0.9989996665555185,
+      "support": 3000.0
+    },
+    "Infiltration": {
+      "precision": 1.0,
+      "recall": 0.8571428571428571,
+      "f1-score": 0.9230769230769231,
+      "support": 7.0
+    },
+    "Botnet": {
+      "precision": 0.9759450171821306,
+      "recall": 0.9861111111111112,
+      "f1-score": 0.9810017271157168,
+      "support": 288.0
+    },
+    "Web Attacks": {
+      "precision": 0.9952941176470588,
+      "recall": 0.986013986013986,
+      "f1-score": 0.990632318501171,
+      "support": 429.0
+    },
+    "Port Scan": {
+      "precision": 0.9847328244274809,
+      "recall": 0.989769820971867,
+      "f1-score": 0.9872448979591837,
+      "support": 391.0
+    },
+    "accuracy": 0.9966513185433236,
+    "macro avg": {
+      "precision": 0.9934282816829276,
+      "recall": 0.976338055238311,
+      "f1-score": 0.9841895167157939,
+      "support": 11945.0
+    },
+    "weighted avg": {
+      "precision": 0.9966584975701206,
+      "recall": 0.9966513185433236,
+      "f1-score": 0.9966500160437732,
+      "support": 11945.0
+    }
+  }
+}

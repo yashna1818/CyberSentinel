@@ -1,0 +1,9 @@
+Dataset,Category,Rows,Columns,File Size (MB),File Size (Bytes)
+Benign-Monday-no-metadata.parquet,Benign,458831,78,54.14,56765918
+Botnet-Friday-no-metadata.parquet,Botnet,176038,78,18.94,19855151
+Bruteforce-Tuesday-no-metadata.parquet,Brute Force,389714,78,44.0,46140640
+DDoS-Friday-no-metadata.parquet,DDoS,221264,78,24.13,25302305
+DoS-Wednesday-no-metadata.parquet,DoS,584991,78,65.04,68198756
+Infiltration-Thursday-no-metadata.parquet,Infiltration,207630,78,22.07,23145829
+Portscan-Friday-no-metadata.parquet,Port Scan,119522,78,12.96,13594122
+WebAttacks-Thursday-no-metadata.parquet,Web Attacks,155820,78,16.84,17652834

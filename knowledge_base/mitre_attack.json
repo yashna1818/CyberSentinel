@@ -1,0 +1,188 @@
+{
+  "version": "14.1",
+  "name": "MITRE ATT&CK Knowledge Base for Network Security Operations",
+  "techniques": [
+    {
+      "technique_id": "T1110",
+      "sub_technique_id": "T1110.001",
+      "name": "Brute Force: Password Guessing",
+      "tactic": "Credential Access",
+      "tactic_id": "TA0006",
+      "description": "Adversaries may systematically guess passwords to gain unauthorized access to accounts, attempting multiple combinations on targeted authentication services such as FTP (port 21) or SSH (port 22).",
+      "associated_attacks": ["Brute Force", "FTP-Patator", "SSH-Patator"],
+      "indicators": [
+        "Rapid sequence of failed authentication attempts within seconds",
+        "High volume of small TCP flows to port 21 or 22",
+        "Uniform packet length sequences and low backward payload bytes",
+        "Multiple SYN packets without successful interactive shell session"
+      ],
+      "objectives": "Obtain valid user credentials to penetrate perimeter access and establish remote shell access.",
+      "mitigations": [
+        "M1036: Account Use Policies - Implement strict account lockout thresholds after 3-5 consecutive failures.",
+        "M1032: Multi-Factor Authentication (MFA) - Require hardware tokens or OTP for all external administrative interfaces.",
+        "M1035: Limit Access to Remote Services - Restrict SSH/FTP ingress via VPN or bastion host IP whitelisting."
+      ],
+      "detection": "Monitor authentication daemon logs (sshd, vsftpd) and detect high-frequency TCP connection flows targeting port 22 or 21 from single or clustered IP addresses.",
+      "references": [
+        "https://attack.mitre.org/techniques/T1110/001/",
+        "https://csrc.nist.gov/publications/detail/sp/800-63b/final"
+      ]
+    },
+    {
+      "technique_id": "T1046",
+      "sub_technique_id": null,
+      "name": "Network Service Discovery",
+      "tactic": "Discovery",
+      "tactic_id": "TA0007",
+      "description": "Adversaries may enumerate open ports and listening services on victim hosts to identify attack surfaces, vulnerable software versions, or misconfigured daemons.",
+      "associated_attacks": ["Port Scan", "PortScan", "Reconnaissance"],
+      "indicators": [
+        "Rapid sequence of SYN/FIN packets across a wide range of destination ports",
+        "Very low Flow Duration (< 50 ms per probe) and negligible payload transfer",
+        "RST-ACK packets returned by closed ports or dropped packet timeouts",
+        "Asymmetric Down/Up ratio from single source IP across multiple victim sockets"
+      ],
+      "objectives": "Map accessible victim perimeter services prior to vulnerability exploitation or brute-force delivery.",
+      "mitigations": [
+        "M1031: Network Intrusion Prevention - Deploy stateful firewall rules to drop unsolicited port probe sweeps.",
+        "M1037: Filter Network Traffic - Close all non-essential perimeter ports; restrict administrative ports.",
+        "M1050: Exploit Protection - Minimize banner exposure and disable verbose error responses."
+      ],
+      "detection": "Correlate sliding windows where a single source IP contacts > 15 distinct destination ports within a 10-second interval.",
+      "references": [
+        "https://attack.mitre.org/techniques/T1046/",
+        "https://nmap.org/book/man-port-scanning-techniques.html"
+      ]
+    },
+    {
+      "technique_id": "T1498",
+      "sub_technique_id": "T1498.001",
+      "name": "Network Denial of Service: Direct Network Flood",
+      "tactic": "Impact",
+      "tactic_id": "TA0040",
+      "description": "Adversaries may direct high volumes of network traffic toward an architecture to exhaust network bandwidth or saturate state tables on perimeter firewalls and routers.",
+      "associated_attacks": ["DDoS", "DoS Hulk", "Volumetric Flood"],
+      "indicators": [
+        "Abnormal surge in Flow Packets/s exceeding 10,000 pps",
+        "Extreme ratio of Forward Packets to Backward Packets",
+        "High concentration of TCP SYN or UDP datagram floods from distributed IP sources",
+        "Service degradation, dropped connections, and packet loss on victim edge router"
+      ],
+      "objectives": "Disrupt legitimate operational availability and deny service access to customers and employees.",
+      "mitigations": [
+        "M1037: Filter Network Traffic - Implement upstream upstream BGP Anycast and ISP null-routing (blackholing).",
+        "M1021: Restrict Web-Based Content - Deploy DDoS mitigation proxies (Cloudflare, Akamai, AWS Shield).",
+        "M1031: Network Intrusion Prevention - Configure SYN cookies and TCP half-open connection rate limiting."
+      ],
+      "detection": "Detect volumetric anomalies where aggregate incoming packet rates across an IP subnet exceed baseline thresholds by 300% within a 5-second tumbling window.",
+      "references": [
+        "https://attack.mitre.org/techniques/T1498/001/",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-110a"
+      ]
+    },
+    {
+      "technique_id": "T1499",
+      "sub_technique_id": "T1499.003",
+      "name": "Endpoint Denial of Service: Application Exhaustion Flood",
+      "tactic": "Impact",
+      "tactic_id": "TA0040",
+      "description": "Adversaries may exhaust software resources on web servers using asymmetric application-layer attacks like Slowloris, Slowhttptest, or GoldenEye by holding HTTP connections open with partial headers.",
+      "associated_attacks": ["DoS", "DoS slowloris", "DoS Slowhttptest", "DoS GoldenEye"],
+      "indicators": [
+        "Very long Flow Duration (> 60-120 seconds per session)",
+        "Low packet rate per session with periodic keep-alive byte transfers",
+        "Maxed-out web server thread pool (Apache MaxRequestWorkers / Nginx worker_connections)",
+        "504 Gateway Timeout or 503 Service Unavailable errors on web application"
+      ],
+      "objectives": "Consume all server worker threads or sockets without triggering bandwidth-based volumetric volumetric alert thresholds.",
+      "mitigations": [
+        "M1037: Filter Network Traffic - Configure aggressive HTTP connection and request header timeout limits.",
+        "M1050: Exploit Protection - Deploy reverse proxy with asynchronous non-blocking connection handling (e.g., Nginx, HAProxy).",
+        "M1021: Restrict Web-Based Content - Set client body buffer limits and minimum data transfer rates."
+      ],
+      "detection": "Identify connections with abnormally high Flow Duration combined with minimal bytes/second and incomplete HTTP request termination.",
+      "references": [
+        "https://attack.mitre.org/techniques/T1499/003/",
+        "https://owasp.org/www-community/attacks/Slowloris"
+      ]
+    },
+    {
+      "technique_id": "T1190",
+      "sub_technique_id": null,
+      "name": "Exploit Public-Facing Application",
+      "tactic": "Initial Access",
+      "tactic_id": "TA0001",
+      "description": "Adversaries may attempt to exploit vulnerabilities, bugs, or input validation flaws in public web applications (such as SQL Injection, Cross-Site Scripting, or Command Injection) to execute unauthorized commands.",
+      "associated_attacks": ["Web Attacks", "Web Attack – XSS", "Web Attack – Sql Injection", "Web Attack – Brute Force"],
+      "indicators": [
+        "HTTP requests targeting ports 80 or 443 with unusual URI parameter lengths or special characters",
+        "Repetitive POST/GET requests targeting form endpoints or database query parameters",
+        "High variance in backward packet length indicating database error disclosures",
+        "Subflow payload signatures containing SQL escape sequences or script tags"
+      ],
+      "objectives": "Extract sensitive database records, execute arbitrary code, or hijack authenticated user sessions.",
+      "mitigations": [
+        "M1050: Exploit Protection - Deploy a Web Application Firewall (WAF) with OWASP Core Rule Set.",
+        "M1016: Vulnerability Scanning - Run regular dynamic and static code security assessments.",
+        "M1041: Defensive Software Development - Use parameterized queries and output sanitization."
+      ],
+      "detection": "Monitor web server request logs and WAF alerts for SQL query syntax, script injections, and abnormal status codes (500 Internal Error, 200 with database dumps).",
+      "references": [
+        "https://attack.mitre.org/techniques/T1190/",
+        "https://owasp.org/www-project-top-ten/"
+      ]
+    },
+    {
+      "technique_id": "T1071",
+      "sub_technique_id": "T1071.001",
+      "name": "Application Layer Protocol: Web Protocols (Command and Control)",
+      "tactic": "Command and Control",
+      "tactic_id": "TA0011",
+      "description": "Adversaries may communicate using application layer protocols (e.g., HTTP/HTTPS or IRC) to avoid network filtering and control compromised botnet zombie nodes or implants.",
+      "associated_attacks": ["Botnet", "Bot", "ARES Botnet"],
+      "indicators": [
+        "Periodic beaconing intervals between internal endpoint and external C2 host",
+        "Persistent TCP sessions with uniform Flow IAT (Inter-Arrival Time) patterns",
+        "Encrypted or obfuscated payloads on port 8080, 6667, or 443",
+        "Simultaneous outgoing connections to identical external IPs from multiple internal hosts"
+      ],
+      "objectives": "Maintain operational control, receive instructions, exfiltrate data, and stage synchronized secondary attacks.",
+      "mitigations": [
+        "M1037: Filter Network Traffic - Restrict outbound egress traffic using strict proxy authentication.",
+        "M1020: SSL/TLS Inspection - Inspect TLS traffic for anomalous certificate authorities and C2 beaconing.",
+        "M1049: Antivirus/Antimalware - Block known botnet binary execution via EDR endpoint containment."
+      ],
+      "detection": "Detect regular, rhythmic communication patterns (low Flow IAT Variance) directed to external unclassified IP addresses.",
+      "references": [
+        "https://attack.mitre.org/techniques/T1071/001/",
+        "https://attack.mitre.org/tactics/TA0011/"
+      ]
+    },
+    {
+      "technique_id": "T1210",
+      "sub_technique_id": null,
+      "name": "Exploitation of Remote Services",
+      "tactic": "Lateral Movement",
+      "tactic_id": "TA0008",
+      "description": "Adversaries may exploit vulnerabilities in remote services (such as SMB, RDP, or SSH) to move laterally across an internal network after initial breach.",
+      "associated_attacks": ["Infiltration", "Lateral Movement"],
+      "indicators": [
+        "Internal workstation initiating SMB (port 445) or RPC traffic to multiple peer workstations",
+        "High volume of bidirectional data transfers following port reconnaissance",
+        "Abnormal process creation triggered by incoming network sockets",
+        "Elevated privileges gained on secondary internal subnet machines"
+      ],
+      "objectives": "Expand access across victim subnets, locate high-value target assets, and establish persistence.",
+      "mitigations": [
+        "M1030: Network Segmentation - Segment internal subnets with VLANs and microsegmentation firewalls.",
+        "M1026: Privileged Account Management - Disable local administrator credential reuse across workstations (LAPS).",
+        "M1051: Patch Management - Rapidly apply security patches to internal enterprise service daemons."
+      ],
+      "detection": "Correlate internal workstation IP initiating outbound service connections to other workstations on ports 445/139/3389.",
+      "references": [
+        "https://attack.mitre.org/techniques/T1210/",
+        "https://attack.mitre.org/tactics/TA0008/"
+      ]
+    }
+  ]
+}
